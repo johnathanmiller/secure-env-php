@@ -1,3 +1,6 @@
+## 0.9.3, 2018-12-16
+- Added type and updated php version requirements in composer.json
+
 ## 0.9.2, 2018-12-16
 - Updated php versions for travis testing
 

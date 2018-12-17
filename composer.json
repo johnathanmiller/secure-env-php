@@ -2,6 +2,7 @@
     "name": "johnathanmiller/secure-env-php",
     "description": "Encrypt environment files for production use.",
     "keywords": ["dotenv", "encryption", "env", "environment", "environment-variables", "environment-vars", "secure-env"],
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +12,7 @@
         }
     ],
     "require": {
-		"php": ">=7.0"
+		"php": ">=7.1"
     },
     "require-dev": {
 		"phpunit/phpunit": "^7.5"
