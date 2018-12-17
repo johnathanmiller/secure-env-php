@@ -1,3 +1,6 @@
+## 0.9.2, 2018-12-16
+- Updated php versions for travis testing
+
 ## 0.9.1, 2018-12-16
 - Added CHANGELOG
 - Fixed test class names for CryptoTest and ParserTest
