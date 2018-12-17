@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require_once './src/Crypto.php';
+require_once './vendor/autoload.php';
 
 $options = [
     'path' => '.env',
