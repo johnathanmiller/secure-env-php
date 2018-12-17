@@ -1,4 +1,7 @@
 # Secure Env PHP
+
+[![Build Status](https://travis-ci.org/johnathanmiller/secure-env-php.svg?branch=master)](https://travis-ci.org/johnathanmiller/secure-env-php)
+
 Env encryption and decryption library.  
 Prevent commiting and exposing vulnerable plain-text environment variables in production environments.
 
