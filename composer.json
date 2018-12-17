@@ -1,0 +1,27 @@
+{
+    "name": "johnathanmiller/secure-env-php",
+    "description": "Encrypt environment files for production use.",
+    "keywords": ["dotenv", "encryption", "env", "environment", "environment-variables", "environment-vars", "secure-env"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johnathan Miller",
+            "email": "hello@johnathanmiller.com",
+            "homepage": "https://johnathanmiller.com"
+        }
+    ],
+    "require": {
+		"php": ">=7.0"
+    },
+    "require-dev": {
+		"phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "SecureEnvPHP\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/encrypt-env"
+    ]
+}

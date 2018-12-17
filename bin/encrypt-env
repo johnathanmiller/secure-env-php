@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+
+require_once './src/Crypto.php';
+
+$options = [
+    'path' => '.env',
+    'algo' => 'aes256'
+];
+
+try {
+
+    // ENV PATH
+    fwrite(STDOUT, "Path to .env file [\x1b[33m.env\x1b[0m]: ");
+
+    $path_input = trim(fgets(STDIN));
+
+    if (!empty($path_input)) {
+        $options['path'] = $path_input;
+    }
+
+    if (!file_exists($options['path'])) throw new Exception('File does not exist.');
+
+    // GENERATE RANDOM SECRET
+    if (function_exists('random_bytes')) {
+        $generated_secret = bin2hex(random_bytes(16));
+
+    } else {
+        $generated_secret = bin2hex(openssl_random_pseudo_bytes(16));
+    }
+
+    // SECRET
+    fwrite(STDOUT, "Secret (make sure to copy this or input your own) [\x1b[33m" . $generated_secret . "\x1b[0m]: ");
+
+    $secret_input = trim(fgets(STDIN));
+    $options['secret'] = (!empty($secret_input)) ? $secret_input : $generated_secret;
+
+    // ENCRYPTION ALGORITHM
+    fwrite(STDOUT, "Encryption algorithm [\x1b[33m" . $options['algo'] . "\x1b[0m]: ");
+
+    $algo_input = trim(fgets(STDIN));
+
+    if (!empty($algo_input)) {
+        if (!in_array($algo_input, openssl_get_cipher_methods(true))) throw new \Exception("Unknown algorithm. For a list of supported algorithms visit: (\x1b[32mhttps://secure.php.net/manual/en/function.openssl-get-cipher-methods.php\x1b[0m)");
+        $options['algo'] = $algo_input;
+    }
+
+    // OUTPUT FILE
+    fwrite(STDOUT, "Save to [\x1b[33m" . $options['path'] . ".enc\x1b[0m]: ");
+
+    $output_input = trim(fgets(STDIN));
+    $options['output'] = (!empty($output_input)) ? $output_input : $options['path'] . '.enc';
+
+    (new \SecureEnvPHP\Crypto)->encrypt($options);
+
+    if (file_exists($options['output'])) {
+        fwrite(STDOUT, "\x1b[32mFile encryption successful!\x1b[0m\n");
+    }
+
+} catch (Exception $e) {
+    fwrite(STDERR, "\x1b[31m[Error]\x1b[0m " . $e->getMessage() . "\n");
+}
