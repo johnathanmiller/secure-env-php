@@ -6,7 +6,7 @@ use \PHPUnit\Framework\TestCase;
 use \SecureEnvPHP\Crypto;
 use \SecureEnvPHP\Parser as Parser;
 
-class SecureEnvPHPTest extends TestCase {
+class ParserTest extends TestCase {
 
     // PARSE TEST
     public function testParse() : void {

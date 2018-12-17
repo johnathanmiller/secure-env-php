@@ -5,7 +5,7 @@ declare(strict_types=1);
 use \PHPUnit\Framework\TestCase;
 use \SecureEnvPHP\Crypto;
 
-class SecureEnvPHPTest extends TestCase {
+class CryptoTest extends TestCase {
 
     // ENCRYPTION TESTS
     public function testEncryptMissingPathKey() : void {
