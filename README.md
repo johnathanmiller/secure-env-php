@@ -20,7 +20,7 @@ DB_PASS=password
 ```
 
 ## Encrypting
-In your project directory, run through the command prompts to encrypt your `.env` file by running `vendor/bin/encrypt-env` in the terminal. You can press enter to accept the default values in the square brackets.
+Execute `vendor/bin/encrypt-env` in your project directory and follow the command prompts to encrypt your `.env` file. You can press enter to accept the default values in the square brackets.
 ```bash
 Path to .env file [.env]: /path/to/.env  
 Secret (make sure to copy this or input your own) [randomstring]: secretkey  
@@ -46,7 +46,7 @@ use SecureEnvPHP\SecureEnvPHP;
 Instantiate class with decryption options.
 ```php
 new SecureEnvPHP([
-    'path' => '.env',
+    'path' => '.env.enc',
     'secret' => 'secretkey'
 ]);
 ```
