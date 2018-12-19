@@ -1,3 +1,6 @@
+## 1.0.0, 2018-12-19
+- Updated encrypt-env and Crypto
+
 ## 0.9.4, 2018-12-16
 - Fixed require path in encrypt-env
 

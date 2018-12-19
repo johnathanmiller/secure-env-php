@@ -10,16 +10,20 @@ $options = [
 
 try {
 
+    fwrite(STDOUT, "\nSecure Env PHP encryption tool.\nPress enter to accept default values in the square brackets.\n\n");
+
     // ENV PATH
     fwrite(STDOUT, "Path to .env file [\x1b[33m.env\x1b[0m]: ");
 
     $path_input = trim(fgets(STDIN));
 
-    if (!empty($path_input)) {
+    if (!empty($path_input) && !is_dir($path_input)) {
         $options['path'] = $path_input;
     }
 
-    if (!file_exists($options['path'])) throw new Exception('File does not exist.');
+    if (!file_exists($options['path'])) {
+        throw new \Exception('File does not exist.');
+    }
 
     // GENERATE RANDOM SECRET
     if (function_exists('random_bytes')) {
@@ -41,7 +45,10 @@ try {
     $algo_input = trim(fgets(STDIN));
 
     if (!empty($algo_input)) {
-        if (!in_array($algo_input, openssl_get_cipher_methods(true))) throw new \Exception("Unknown algorithm. For a list of supported algorithms visit: (\x1b[32mhttps://secure.php.net/manual/en/function.openssl-get-cipher-methods.php\x1b[0m)");
+        if (!in_array($algo_input, openssl_get_cipher_methods(true))) {
+            throw new \Exception("Unknown algorithm. For a list of supported algorithms visit: (\x1b[32mhttps://secure.php.net/manual/en/function.openssl-get-cipher-methods.php\x1b[0m)");
+        }
+        
         $options['algo'] = $algo_input;
     }
 
@@ -54,7 +61,7 @@ try {
     (new \SecureEnvPHP\Crypto)->encrypt($options);
 
     if (file_exists($options['output'])) {
-        fwrite(STDOUT, "\x1b[32mFile encryption successful!\x1b[0m\n");
+        fwrite(STDOUT, "\n\x1b[32mFile encryption successful!\x1b[0m\n");
     }
 
 } catch (Exception $e) {
