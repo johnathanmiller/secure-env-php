@@ -8,12 +8,14 @@ use \SecureEnvPHP\Parser as Parser;
 
 class ParserTest extends TestCase {
 
-    // PARSE TEST
+    /**
+     * Test parsing decrypted env file and matching expected object
+     */
     public function testParse() : void {
         $crypto = new Crypto;
         $decrypt = $crypto->decrypt([
             'path' => './tests/.env.enc',
-            'secret' => 'test'
+            'secret' => './tests/.env.key'
         ]);
 
         $parsed = Parser::parse($decrypt);

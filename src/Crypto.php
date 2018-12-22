@@ -2,6 +2,8 @@
 
 namespace SecureEnvPHP;
 
+use \SecureEnvPHP\Key;
+
 class Crypto {
 
     /**
@@ -14,7 +16,7 @@ class Crypto {
         $options['path'] = $options['path'] ?? '.env.enc';
 
         if (empty($options['path'])) {
-            throw new \Exception('Path key is empty.');
+            throw new \Exception('Path is empty.');
         }
 
         if (!file_exists($options['path'])) {
@@ -28,9 +30,15 @@ class Crypto {
         if (!isset($options['secret'])) {
             throw new \Exception('Secret key not found in options object.');
         }
+
+        if (file_exists($options['secret']) && !is_dir($options['secret'])) {
+            $secret = (new \SecureEnvPHP\Key)->read($options['secret']);
+            
+        } else {
+            $secret = $options['secret'];
+        }
         
         $path = fopen($options['path'], 'rb');
-        $secret = $options['secret'];
         $algo = $options['algo'] ?? 'aes256';
         $iv = fread($path, openssl_cipher_iv_length($algo));
         $cipher = fread($path, filesize($options['path']));
@@ -47,11 +55,11 @@ class Crypto {
      */
     public function encrypt(array $options) : void {
         if (!isset($options['path'])) {
-            throw new \Exception('Path key not found in options object.');
+            throw new \Exception('Path not found in options object.');
         }
 
         if (empty($options['path'])) {
-            throw new \Exception('Path key is empty.');
+            throw new \Exception('Path is empty.');
         }
 
         if (!file_exists($options['path'])) {
@@ -63,7 +71,7 @@ class Crypto {
         }
 
         if (!isset($options['secret'])) {
-            throw new \Exception('Secret key not found in options object.');
+            throw new \Exception('Secret not found in options object.');
         }
             
         $secret = $options['secret'];

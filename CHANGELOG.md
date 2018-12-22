@@ -1,3 +1,10 @@
+## 1.1.0, 2018-12-22
+- Added Key class
+- Updated Crypto class
+- Updated encrypt-env prompts
+- Updated test files
+- Updated README
+
 ## 1.0.0, 2018-12-19
 - Updated encrypt-env and Crypto
 

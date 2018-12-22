@@ -5,6 +5,8 @@
 Env encryption and decryption library.  
 Prevent committing and exposing vulnerable plain-text environment variables in production environments.
 
+You can view a more in-depth tutorial on [Medium](https://medium.com/@johnathanmiller/securing-php-environment-variables-for-production-use-f867e584a1f9).
+
 ## Installation
 Install secure-env-php using Composer
 ```
@@ -21,22 +23,15 @@ DB_PASS=password
 
 ## Encrypting
 Execute `vendor/bin/encrypt-env` in your project directory and follow the command prompts to encrypt your `.env` file. You can press enter to accept the default values in the square brackets.
-```bash
-Path to .env file [.env]: /path/to/.env  
-Secret (make sure to copy this or input your own) [randomstring]: secretkey  
-Encryption algorithm [aes256]: algorithm-name  
-Save to [.env.enc]: /path/to/.env.enc  
-```
 
-## Encryption Options
-| Prompt | default |
-| ------ | ------- |
-| Path to .env file | `.env`
-| Secret | `randomly generated string`
-| Encryption algorithm | `aes256`
-| Output path to encrypted file | `.env.enc`
+![Encryption Prompts](https://cdn-images-1.medium.com/max/1600/1*PCjFohyf8AMoL_lHOaip4A.png)
+## Encryption Prompts
+1. Path to your .env file you want to encrypt.
+2. Input "y" or "yes" to generate a new secret key file. Otherwise input path to secret key file when prompted.
+3. Your choice of encryption algorith or accept the default provided. For a list of supported algorithms visit: https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php.
+4. Path to save the encrypted environment file.
 
-For a list of supported algorithms visit: https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php.
+After you've successfully completed the prompts you should now have an encrypted environment file.
 
 ## Import and Instantiate
 Import into namespace environment
@@ -47,7 +42,7 @@ Instantiate class with decryption options.
 ```php
 new SecureEnvPHP([
     'path' => '.env.enc',
-    'secret' => 'secretkey'
+    'secret' => '.env.key'
 ]);
 ```
 
@@ -56,7 +51,7 @@ new SecureEnvPHP([
 | ------ | ---------- | ------- |
 | algo | Encryption algorithm | `aes256`
 | path | Path to encrypted file | `.env.enc`
-| secret | Secret key |
+| secret | Path to key file *or* secret string |
 
 ## Retrieving Env Values
 After instantiating the SecureEnvPHP class you can retrieve your values in your project by calling `getenv` with your variable names, such as `getenv('DB_HOST')`.
@@ -71,7 +66,7 @@ use SecureEnvPHP\SecureEnvPHP;
 
 new SecureEnvPHP([
     'path' => '.env.enc',
-    'secret' => '924f028a2e2055193caa03a77754ccc6'
+    'secret' => '.env.key'
 ]);
 
 $host = getenv('DB_HOST');
