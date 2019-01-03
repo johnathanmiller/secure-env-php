@@ -11,7 +11,8 @@ class SecureEnvPHPTest extends TestCase {
      * Testing with path to env and path to secret key, then retrieving env value
      */
     public function testInitWithSecretPathAndGetEnv() : void {
-        $secureEnv = new SecureEnvPHP([
+        $secureEnv = new SecureEnvPHP();
+        $secureEnv->parse([
             'path' => './tests/.env.enc',
             'secret' => './tests/.env.key'
         ]);
@@ -28,7 +29,8 @@ class SecureEnvPHPTest extends TestCase {
         $secret = fread($key_file, filesize($path));
         fclose($key_file);
         
-        $secureEnv = new SecureEnvPHP([
+        $secureEnv = new SecureEnvPHP();
+        $secureEnv->parse([
             'path' => './tests/.env.enc',
             'secret' => $secret
         ]);
