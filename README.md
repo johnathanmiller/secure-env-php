@@ -40,7 +40,7 @@ use SecureEnvPHP\SecureEnvPHP;
 ```
 Instantiate class with decryption options.
 ```php
-new SecureEnvPHP([
+(new SecureEnvPHP())->parse([
     'path' => '.env.enc',
     'secret' => '.env.key'
 ]);
@@ -64,7 +64,7 @@ require_once './vendor/autoload.php';
 
 use SecureEnvPHP\SecureEnvPHP;
 
-new SecureEnvPHP([
+(new SecureEnvPHP())->parse([
     'path' => '.env.enc',
     'secret' => '.env.key'
 ]);
