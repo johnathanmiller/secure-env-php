@@ -6,7 +6,7 @@ use \SecureEnvPHP\Parser as Parser;
 
 class SecureEnvPHP {
 
-    public function __construct(array $options) {
+    public function parse(array $options): void {
         $crypto = new \SecureEnvPHP\Crypto;
 
         if ($decrypted = $crypto->decrypt($options)) {
@@ -19,5 +19,4 @@ class SecureEnvPHP {
             }
         }
     }
-
 }
