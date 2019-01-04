@@ -1,3 +1,6 @@
+## 1.2.0, 2019-01-03
+- Merged phpsed's branch using parse method instead of constructor
+
 ## 1.1.0, 2018-12-22
 - Added Key class
 - Updated Crypto class
