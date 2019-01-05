@@ -1,15 +1,12 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types = 1);
 
 require_once './vendor/autoload.php';
 
-$options = [
-    'path' => '.env',
-    'algo' => 'aes256'
-];
+$path = '.env';
+$algo = 'aes256';
 
 try {
-
     fwrite(STDOUT, "\nSecure Env PHP encryption tool.\nPress enter to accept default values in the square brackets.\n\n");
 
     // ENV PATH
@@ -18,17 +15,17 @@ try {
     $path_input = trim(fgets(STDIN));
 
     if (!empty($path_input) && !is_dir($path_input)) {
-        $options['path'] = $path_input;
+        $path = $path_input;
     }
 
-    if (!file_exists($options['path'])) {
-        throw new \Exception('File does not exist.');
+    if (!file_exists($path)) {
+        throw new RuntimeException('File does not exist.');
     }
 
     // SECRET KEY
     fwrite(STDOUT, "Generate Secret Key file? [y|\x1b[33mn\x1b[0m]: ");
 
-    if (!in_array(trim(strtolower(fgets(STDIN))), ['y', 'yes'])) {
+    if (!in_array(trim(strtolower(fgets(STDIN))), ['y', 'yes'], true)) {
         // INPUT SECRET
         fwrite(STDOUT, "↳ Path to secret key [\x1b[33m.env.key\x1b[0m]: ");
 
@@ -37,41 +34,37 @@ try {
         if (empty($key_path)) {
             $key_path = '.env.key';
         }
-        
+
         $secret = (new \SecureEnvPHP\Key)->read($key_path);
-        
     } else {
         // GENERATE SECRET KEY
         $secret = (new \SecureEnvPHP\Key)->generate('./.env.key');
     }
 
-    $options['secret'] = $secret;
-
     // ENCRYPTION ALGORITHM
-    fwrite(STDOUT, "Encryption algorithm [\x1b[33m" . $options['algo'] . "\x1b[0m]: ");
+    fwrite(STDOUT, "Encryption algorithm [\x1b[33m".$algo."\x1b[0m]: ");
 
     $algo_input = trim(fgets(STDIN));
 
     if (!empty($algo_input)) {
-        if (!in_array($algo_input, openssl_get_cipher_methods(true))) {
-            throw new \Exception("Unknown algorithm. For a list of supported algorithms visit: (\x1b[32mhttps://secure.php.net/manual/en/function.openssl-get-cipher-methods.php\x1b[0m)");
+        if (!in_array($algo_input, openssl_get_cipher_methods(true), true)) {
+            throw new RuntimeException("Unknown algorithm. For a list of supported algorithms visit: (\x1b[32mhttps://secure.php.net/manual/en/function.openssl-get-cipher-methods.php\x1b[0m)");
         }
-        
-        $options['algo'] = $algo_input;
+
+        $algo = $algo_input;
     }
 
     // OUTPUT FILE
-    fwrite(STDOUT, "Save to [\x1b[33m" . $options['path'] . ".enc\x1b[0m]: ");
+    fwrite(STDOUT, "Save to [\x1b[33m".$path.".enc\x1b[0m]: ");
 
     $output_input = trim(fgets(STDIN));
-    $options['output'] = (!empty($output_input)) ? $output_input : $options['path'] . '.enc';
+    $output = !empty($output_input) ? $output_input : $path.'.enc';
 
-    (new \SecureEnvPHP\Crypto)->encrypt($options);
+    (new \SecureEnvPHP\Crypto)->encrypt($secret, $path, $algo, $output);
 
-    if (file_exists($options['output'])) {
+    if (file_exists($output)) {
         fwrite(STDOUT, "\n\x1b[32mFile encryption successful!\x1b[0m\n");
     }
-
 } catch (Exception $e) {
-    fwrite(STDERR, "\x1b[31m[Error]\x1b[0m " . $e->getMessage() . "\n");
+    fwrite(STDERR, "\x1b[31m[Error]\x1b[0m ".$e->getMessage()."\n");
 }
