@@ -19,7 +19,11 @@
     },
     "autoload": {
         "psr-4": {
-            "SecureEnvPHP\\": "src/",
+            "SecureEnvPHP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "SecureEnvPHP\\Tests\\": "tests/"
         }
     },
