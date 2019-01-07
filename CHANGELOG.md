@@ -1,3 +1,9 @@
+## 2.0.1, 2019-01-06
+- Fixed incorrect order of arguments in encrypt method
+
+## 2.0.0, 2019-01-06
+- Merged k0d3r1s's branch
+
 ## 1.2.0, 2019-01-03
 - Merged phpsed's branch using parse method instead of constructor
 

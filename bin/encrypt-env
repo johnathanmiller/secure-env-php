@@ -60,7 +60,7 @@ try {
     $output_input = trim(fgets(STDIN));
     $output = !empty($output_input) ? $output_input : $path.'.enc';
 
-    (new \SecureEnvPHP\Crypto)->encrypt($secret, $path, $algo, $output);
+    (new \SecureEnvPHP\Crypto)->encrypt($path, $secret, $algo, $output);
 
     if (file_exists($output)) {
         fwrite(STDOUT, "\n\x1b[32mFile encryption successful!\x1b[0m\n");
