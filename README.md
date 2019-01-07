@@ -38,20 +38,17 @@ Import into namespace environment
 ```php
 use SecureEnvPHP\SecureEnvPHP;
 ```
-Instantiate class with decryption options.
+Instantiate class with your decryption arguments. First argument is path to your encrypted env file, second argument is path to your secret key file, and optionally a third argument can be set for your choice of encryption algorithm, *(this needs to match the algorithm you used to encrypt your env file)*.
 ```php
-(new SecureEnvPHP())->parse(
-    '.env.enc', //path
-    '.env.key' //secret
-);
+(new SecureEnvPHP())->parse('.env.enc', '.env.key');
 ```
 
 ## Decryption Options
-| name | description | default |
+| parameter | description | default |
 | ------ | ---------- | ------- |
-| algo | Encryption algorithm | `aes256`
-| path | Path to encrypted file | `.env.enc`
-| secret | Path to key file *or* secret string |
+| 1. path | Path to encrypted file | `.env.enc`
+| 2. secret | Path to key file *or* secret string |
+| 3. algo | Encryption algorithm | `aes256`
 
 ## Retrieving Env Values
 After instantiating the SecureEnvPHP class you can retrieve your values in your project by calling `getenv` with your variable names, such as `getenv('DB_HOST')`.
@@ -64,10 +61,7 @@ require_once './vendor/autoload.php';
 
 use SecureEnvPHP\SecureEnvPHP;
 
-(new SecureEnvPHP())->parse(
-    '.env.enc', //path
-    '.env.key' //secret
-);
+(new SecureEnvPHP())->parse('.env.enc', '.env.key');
 
 $host = getenv('DB_HOST');
 ```
