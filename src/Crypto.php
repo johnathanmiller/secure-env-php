@@ -1,89 +1,74 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace SecureEnvPHP;
 
-use \SecureEnvPHP\Key;
+use Exception;
+use RuntimeException;
 
-class Crypto {
-
+class Crypto
+{
     /**
      * Decrypts environment file and returns content in a string
-     * 
-     * @param array $options
+     *
+     * @param string $secret
+     * @param string $path
+     * @param string $algo
+     *
      * @return string
      */
-    public function decrypt(array $options) : string {
-        $options['path'] = $options['path'] ?? '.env.enc';
-
-        if (empty($options['path'])) {
-            throw new \Exception('Path is empty.');
+    public function decrypt(string $path = Constants::ENV_ENC, string $secret = '', string $algo = Constants::ALGO): string
+    {
+        if (!file_exists($path)) {
+            throw new RuntimeException('File does not exist.');
         }
 
-        if (!file_exists($options['path'])) {
-            throw new \Exception('File does not exist.');
+        if (!in_array($algo, openssl_get_cipher_methods(true), true)) {
+            throw new RuntimeException('Unknown algorithm. For a list of supported algorithms visit: (https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)');
         }
 
-        if (isset($options['algo']) && !empty($options['algo']) && !in_array($options['algo'], openssl_get_cipher_methods(true))) {
-            throw new \Exception('Unknown algorithm. For a list of supported algorithms visit: (https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)');
+        if (file_exists($secret) && !is_dir($secret)) {
+            $secret = (new Key())->read($secret);
         }
 
-        if (!isset($options['secret'])) {
-            throw new \Exception('Secret key not found in options object.');
-        }
+        $handler = fopen($path, 'rb');
+        $iv = fread($handler, openssl_cipher_iv_length($algo));
+        $cipher = fread($handler, filesize($path));
 
-        if (file_exists($options['secret']) && !is_dir($options['secret'])) {
-            $secret = (new \SecureEnvPHP\Key)->read($options['secret']);
-            
-        } else {
-            $secret = $options['secret'];
-        }
-        
-        $path = fopen($options['path'], 'rb');
-        $algo = $options['algo'] ?? 'aes256';
-        $iv = fread($path, openssl_cipher_iv_length($algo));
-        $cipher = fread($path, filesize($options['path']));
-
-        $decrypted = openssl_decrypt($cipher, $algo, $secret, OPENSSL_RAW_DATA, $iv);
-
-        return $decrypted;
+        return openssl_decrypt($cipher, $algo, $secret, OPENSSL_RAW_DATA, $iv);
     }
 
     /**
      * Encrypts environment variables and saves them to a separate file
-     * 
-     * @param array $options
+     *
+     * @param string $secret
+     * @param string $path
+     * @param string $algo
+     * @param string|null $output
+     *
+     * @throws Exception
      */
-    public function encrypt(array $options) : void {
-        if (!isset($options['path'])) {
-            throw new \Exception('Path not found in options object.');
+    public function encrypt(string $path = Constants::ENV_ENC, string $secret = '', string $algo = Constants::ALGO, ?string $output = null): void
+    {
+        if (!file_exists($path)) {
+            throw new RuntimeException('File does not exist.');
         }
 
-        if (empty($options['path'])) {
-            throw new \Exception('Path is empty.');
+        if (!in_array($algo, openssl_get_cipher_methods(true), true)) {
+            throw new RuntimeException('Unknown algorithm. For a list of supported algorithms visit: (https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)');
         }
 
-        if (!file_exists($options['path'])) {
-            throw new \Exception('File does not exist.');
+        $output = $output ?? $path.'.enc';
+        $handler = fopen($path, 'rb');
+        $data = fread($handler, filesize($path));
+        fclose($handler);
+
+        if (function_exists('random_bytes')) {
+            $iv = random_bytes(openssl_cipher_iv_length($algo));
+        } else {
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
         }
 
-        if (isset($options['algo']) && !empty($options['algo']) && !in_array($options['algo'], openssl_get_cipher_methods(true))) {
-            throw new \Exception('Unknown algorithm. For a list of supported algorithms visit: (https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)');
-        }
-
-        if (!isset($options['secret'])) {
-            throw new \Exception('Secret not found in options object.');
-        }
-            
-        $secret = $options['secret'];
-        $algo = $options['algo'] ?? 'aes256';
-        $output = $options['output'] ?? $options['path'] . '.enc';
-        $path = fopen($options['path'], 'r');
-        $data = fread($path, filesize($options['path']));
-        fclose($path);
-
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
-
-        $output_file = fopen($output, 'w');
+        $output_file = fopen($output, 'wb');
         fwrite($output_file, $iv);
 
         $cipher = openssl_encrypt($data, $algo, $secret, OPENSSL_RAW_DATA, $iv);
@@ -91,5 +76,4 @@ class Crypto {
         fwrite($output_file, $cipher);
         fclose($output_file);
     }
-
 }

@@ -40,10 +40,10 @@ use SecureEnvPHP\SecureEnvPHP;
 ```
 Instantiate class with decryption options.
 ```php
-(new SecureEnvPHP())->parse([
-    'path' => '.env.enc',
-    'secret' => '.env.key'
-]);
+(new SecureEnvPHP())->parse(
+    '.env.enc', //path
+    '.env.key' //secret
+);
 ```
 
 ## Decryption Options
@@ -64,10 +64,10 @@ require_once './vendor/autoload.php';
 
 use SecureEnvPHP\SecureEnvPHP;
 
-(new SecureEnvPHP())->parse([
-    'path' => '.env.enc',
-    'secret' => '.env.key'
-]);
+(new SecureEnvPHP())->parse(
+    '.env.enc', //path
+    '.env.key' //secret
+);
 
 $host = getenv('DB_HOST');
 ```

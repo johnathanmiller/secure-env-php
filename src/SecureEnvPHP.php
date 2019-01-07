@@ -1,20 +1,17 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace SecureEnvPHP;
 
-use \SecureEnvPHP\Parser as Parser;
-
-class SecureEnvPHP {
-
-    public function parse(array $options): void {
-        $crypto = new \SecureEnvPHP\Crypto;
-
-        if ($decrypted = $crypto->decrypt($options)) {
-            $parsed = Parser::parse($decrypted);
+class SecureEnvPHP
+{
+    public function parse(string $path = Constants::ENV_ENC, string $secret = '', string $algo = Constants::ALGO): void
+    {
+        if ($decrypted = (new Crypto())->decrypt($path, $secret, $algo)) {
+            $parsed = Parser::parse($decrypted) ?? [];
 
             foreach ($parsed as $key => $value) {
                 if (isset($parsed[$key]) && !empty($parsed[$key])) {
-                    putenv($key . '=' . $value);
+                    putenv($key.'='.$value);
                 }
             }
         }

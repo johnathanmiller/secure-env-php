@@ -12,14 +12,19 @@
         }
     ],
     "require": {
-		"php": ">=7.1"
+        "php": ">=7.1"
     },
     "require-dev": {
-		"phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
         "psr-4": {
             "SecureEnvPHP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SecureEnvPHP\\Tests\\": "tests/"
         }
     },
     "bin": [

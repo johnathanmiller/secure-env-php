@@ -1,16 +1,18 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace SecureEnvPHP;
 
-class Parser {
-
+class Parser
+{
     /**
      * Parses environment file variables and returns an associative array
-     * 
+     *
      * @param string $content
+     *
      * @return array
      */
-    public static function parse(string $content) : array {
+    public static function parse(string $content): array
+    {
         $lines = explode("\n", $content);
 
         $object = [];
@@ -20,9 +22,9 @@ class Parser {
                 $key = $matches[1];
                 $value = $matches[2] ?? '';
 
-                $length = ($value) ? strlen($value) : 0;
-                if ($length > 0 && substr($value, 0, 1) === '"' && substr($value, -1) === '"') {
-                    $value = preg_replace('/\\n/gm', "\n");
+                $length = $value ? strlen($value) : 0;
+                if ($length > 0 && strpos($value, '"') === 0 && substr($value, -1) === '"') {
+                    $value = preg_replace('/\\n/gm', "\n", $value);
                 }
 
                 $value = trim(preg_replace('/(^[\'"]|[\'"]$)/', '', $value));
@@ -33,5 +35,4 @@ class Parser {
 
         return $object;
     }
-
 }
