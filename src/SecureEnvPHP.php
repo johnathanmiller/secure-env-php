@@ -3,6 +3,7 @@
 namespace SecureEnvPHP;
 
 use Exception;
+use RuntimeException;
 
 class SecureEnvPHP
 {
@@ -19,7 +20,7 @@ class SecureEnvPHP
                 }
             }
         } catch (Exception $e) {
-            //Pasrser failed, don't do anything
+            throw new RuntimeException('Parser failed to decrypt environment.');
         }
     }
 }
