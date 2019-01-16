@@ -35,10 +35,14 @@ try {
             $key_path = '.env.key';
         }
 
-        $secret = (new \SecureEnvPHP\Key)->read($key_path);
+        try {
+            $secret = (new \SecureEnvPHP\Key())->read($key_path);
+        } catch (Exception $e) {
+            throw new RuntimeException('File does not exist.');
+        }
     } else {
         // GENERATE SECRET KEY
-        $secret = (new \SecureEnvPHP\Key)->generate('./.env.key');
+        $secret = (new \SecureEnvPHP\Key())->generate('./.env.key');
     }
 
     // ENCRYPTION ALGORITHM
@@ -60,7 +64,7 @@ try {
     $output_input = trim(fgets(STDIN));
     $output = !empty($output_input) ? $output_input : $path.'.enc';
 
-    (new \SecureEnvPHP\Crypto)->encrypt($path, $secret, $algo, $output);
+    (new \SecureEnvPHP\Crypto())->encrypt($path, $secret, $algo, $output);
 
     if (file_exists($output)) {
         fwrite(STDOUT, "\n\x1b[32mFile encryption successful!\x1b[0m\n");

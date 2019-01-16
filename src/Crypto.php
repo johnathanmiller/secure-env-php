@@ -14,14 +14,16 @@ class Crypto
      * @param string $path
      * @param string $algo
      *
-     * @return string
+     * @return bool|string
      */
-    public function decrypt(string $path = Constants::ENV_ENC, string $secret = '', string $algo = Constants::ALGO): string
+    public function decrypt(string $path = Constants::ENV_ENC, string $secret = null, string $algo = Constants::ALGO)
     {
         if (!file_exists($path)) {
             throw new RuntimeException('File does not exist.');
         }
-
+        if (!$secret) {
+            throw new RuntimeException('Secret must be given.');
+        }
         if (!in_array($algo, openssl_get_cipher_methods(true), true)) {
             throw new RuntimeException('Unknown algorithm. For a list of supported algorithms visit: (https://secure.php.net/manual/en/function.openssl-get-cipher-methods.php)');
         }

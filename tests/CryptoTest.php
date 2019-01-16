@@ -63,6 +63,16 @@ class CryptoTest extends TestCase
     }
 
     /**
+     * Test decryption with invalid env secret
+     */
+    public function testDecryptInvalidSecret(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Secret must be given.');
+        (new Crypto())->decrypt(Constants::ENV_ENC_TEST);
+    }
+
+    /**
      * Test decryption with unknown algorithm
      */
     public function testDecryptUnknownAlgorithm(): void
