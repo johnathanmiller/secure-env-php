@@ -24,7 +24,7 @@ class Parser
 
                 $length = $value ? strlen($value) : 0;
                 if ($length > 0 && strpos($value, '"') === 0 && substr($value, -1) === '"') {
-                    $value = preg_replace('/\\n/gm', "\n", $value);
+                    $value = preg_replace('/\\n/m', "\n", $value);
                 }
 
                 $value = trim(preg_replace('/(^[\'"]|[\'"]$)/', '', $value));
