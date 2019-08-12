@@ -16,4 +16,13 @@ class SecureEnvPHP
             }
         }
     }
+    
+    public function clearEnv () 
+    {
+		foreach ( $_ENV as $key => $value ) {
+			if ( strpos ( $key , "DB_" ) > -1 ) {
+				putenv ( "$key" );
+			}
+		}
+	}
 }
