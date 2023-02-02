@@ -14,9 +14,9 @@ class Crypto
      * @param string $path
      * @param string $algo
      *
-     * @return string
+     * @return string|false
      */
-    public function decrypt(string $path = Constants::ENV_ENC, string $secret = '', string $algo = Constants::ALGO): string
+    public function decrypt(string $path = Constants::ENV_ENC, string $secret = '', string $algo = Constants::ALGO): string|false
     {
         if (!file_exists($path)) {
             throw new RuntimeException('File does not exist.');
